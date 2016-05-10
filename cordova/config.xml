@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="ekim.scanner.app" version="1.0.0">
+  <name>EkimBarcodeScanner</name>
+  <description>
+    Приложение для сканирования штрих-кодов для интернет магазина ekim.ru
+  </description>
+  <author email="dev@tabrisjs.com" href="https://tabrisjs.com">
+    gregivy
+  </author>
+  <plugin name="cordova-plugin-inappbrowser" version="1.4.0" />
+  <plugin name="phonegap-plugin-barcodescanner" version="5.0.0" />
+</widget>
