@@ -1,6 +1,6 @@
 {
-  "name": "hello-world",
-  "description": "Tabris.js - Hello, World!",
+  "name": "ekim-scanner",
+  "description": "Barcode scanner for ekim.ru",
   "main": "main.js",
   "dependencies": {
     "tabris": "^1.7.0"
