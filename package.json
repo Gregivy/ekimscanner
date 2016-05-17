@@ -3,6 +3,6 @@
   "description": "Tabris.js - Hello, World!",
   "main": "main.js",
   "dependencies": {
-    "tabris": "^1.7.0"
+    "tabris": "^1.6.0"
   }
 }
