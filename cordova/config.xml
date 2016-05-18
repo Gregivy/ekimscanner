@@ -8,5 +8,5 @@
    Plyusch Gregory
   </author>
   <plugin name="cordova-plugin-inappbrowser" version="1.4.0" />
-  
+  <plugin name="phonegap-plugin-barcodescanner" version="4.0.0" />
 </widget>
