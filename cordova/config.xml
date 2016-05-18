@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget android-versionCode="1" android-packageName="ekim.scanner.app" id="ekim.scanner.app" version="1.0.0">
+<widget android-versionCode="1" android-packageName="com.ekimscanner" id="com.ekimscanner" version="1.0.0">
   <name>EkimBarcodeScanner</name>
   <description>
     App for scanning barcodes and sending the info to ekim.ru
