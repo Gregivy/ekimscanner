@@ -7,6 +7,6 @@
   <author email="gpoi@mail.ru" href="https://vk.com/gregp">
    Plyusch Gregory
   </author>
-  <plugin name="cordova-plugin-inappbrowser" version="1.3.0" />
-  <plugin name="phonegap-plugin-barcodescanner" version="5.0.0" />
+  <plugin name="cordova-plugin-inappbrowser" version="1.4.0" />
+  
 </widget>
