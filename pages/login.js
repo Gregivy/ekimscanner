@@ -49,7 +49,7 @@ function checksuccess() {
 			});
 		}
 	}
-	xhr.open("GET", "./scripts/checklogin.js?"+Math.random());
+	xhr.open("GET", "scripts/checklogin.js?"+Math.random());
 	xhr.send();
 }
 
@@ -81,7 +81,7 @@ login.on("select", function() {
 			});
 		}
 	}
-	xhr.open("GET", "./scripts/login.js?"+Math.random());
+	xhr.open("GET", "scripts/login.js?"+Math.random());
 	xhr.send();
 	
 });
