@@ -59,6 +59,7 @@ login.on("select", function() {
 	var xhr = new tabris.XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState === xhr.DONE) {
+			console.log(xhr.responseText);
 			var ref = cordova.InAppBrowser.open('http://ekim.ru', '_blank', iabSettings);
 			ref.addEventListener('loadstop', function() {
 				//console.log( xhr.responseText+"('"+username.get("text")+"','"+password.get("text")+"');");
