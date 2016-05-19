@@ -82,7 +82,7 @@ login.on("select", function() {
 			});
 		}
 	}
-	xhr.open("GET", "scripts/login.js?_="+Math.random());
+	xhr.open("GET", "scripts/login.js");
 	xhr.send();
 	
 });
