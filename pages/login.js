@@ -35,7 +35,7 @@ function checksuccess() {
 			var ref = cordova.InAppBrowser.open('http://ekim.ru', '_blank', iabSettings);
 			ref.addEventListener('loadstop', function() {
     			ref.executeScript({code: xhr.responseText}, function(r) {
-    				console.log(r);
+    				//console.log(r);
     				ref.close();
     				if (r[0]=="success") {
     					console.log("we are here");
@@ -65,7 +65,7 @@ login.on("select", function() {
 				//console.log( xhr.responseText+"('"+username.get("text")+"','"+password.get("text")+"');");
     			if (trg) {
     				ref.executeScript({code: xhr.responseText+"('"+username.get("text")+"','"+password.get("text")+"');"}, function(r){
-    					console.log(r);
+    					//console.log(r);
     					if (r[0] == "success") {
     						ref.close();
     						page2.open();
