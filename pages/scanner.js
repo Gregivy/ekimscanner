@@ -12,6 +12,9 @@ var openPage = module.exports = function () {
 
 	function unblockUI() {
 		page.find("Button").set('enabled',true);
+		if (scrollView.children().length == 0) {
+			orderButton.set('enabled',false);
+		}
 		activityIndicator.set('visible',false);
 	}
 
@@ -31,13 +34,16 @@ var openPage = module.exports = function () {
 
 	var scanButton = new tabris.Button({
 		text: "Сканнировать штрих-код",
-		layoutData: {centerX: 0, top: 10}
+		textColor: "#ffffff",
+		background: "#217aba",
+		layoutData: {left:50, right: 50, top: 10, height:60}
 	}).appendTo(page);
 
 	var cartTitle = new tabris.TextView({
-	  font: "24px",
-	  text: "Ваша корзина",
-	  layoutData: {left: 5, top: [scanButton, 10]}
+	  font: "28px",
+	  markupEnabled: true,
+	  text: "<b>Ваша корзина</b>",
+	  layoutData: {left: 20, top: [scanButton, 10]}
 	}).appendTo(page);
 
 	var item = {
@@ -48,10 +54,17 @@ var openPage = module.exports = function () {
 
 	var orderButton = new tabris.Button({
 		text: "Оформить заказ",
-		layoutData: {centerX: 0, bottom: 0}
+		background: "#32cd32",
+		textColor: "#ffffff",
+		layoutData: {left:50, right:50, bottom: 20, height:60}
 	}).appendTo(page);
 
 	orderButton.on("select", function () {
+		/*fetch("./scripts/deleteitem.js",{method:"get",cache:"no-cache"}).then(function(response) {
+  			return response.text();
+		}).then(function(text) {
+
+		});
 		var xhr = new tabris.XMLHttpRequest();
 		xhr.onreadystatechange = function() {
 			if(xhr.readyState === xhr.DONE) {
@@ -62,13 +75,14 @@ var openPage = module.exports = function () {
 			}		
 		}
 		xhr.open("GET", "css/order.css?_="+Math.random());
-		xhr.send();
+		xhr.send();*/
+		var ref = cordova.InAppBrowser.open('http://ekim.ru/orders/new', '_target', 'hidden=no,location=no,zoom=yes');
 		//var ref = cordova.InAppBrowser.open('http://ekim.ru/orders/new', '_blank', 'location=no,zoom=no');
 		//ref.insertCSS({file:"css/order.css"});
 	})
 
 	var scrollViewSettings = {
-		  left: 30, right: 0, top: [cartTitle, 5], bottom: [orderButton,5],
+		  left: 0, right: 0, top: [cartTitle, 10], bottom: [orderButton,5],
 		  direction: "vertical",
 		  background: "#ffffff"
 	}
@@ -90,60 +104,68 @@ var openPage = module.exports = function () {
 			var children = scrollView.children();
 			var newitem_top = children.length > 0 ? [children[children.length-1],5] : 0;
 			var newitem = new tabris.Composite({
-		    	layoutData: {left:2, right:2, top: newitem_top}
+		    	layoutData: {left:20, right:20, top: newitem_top}
 		   	}).appendTo(scrollView);
 
 
 			var deleteButton = new tabris.Button({
-				text: "Удалить",
-				layoutData: {right:0, top: 0}
+				background: "red",
+				image: "images/trash.png",
+				layoutData: {right:0, top: 0, width: 50}
 			}).appendTo(newitem);
 
 			var name = new tabris.TextView({
-				font: "16px",
+				font: "12px",
 				text: item.name,
 				layoutData: {left: 2, top: 0, right: [deleteButton,5]}
 			}).appendTo(newitem);
 
 			var price = new tabris.TextView({
-				font: "10px",
-				text: item.price,
+				font: "12px",
+				markupEnabled: true,
+				text: "<b>"+item.price+"</b>",
 				layoutData: {left: 2, top: [name, -10]}
 			}).appendTo(newitem);
 
 			var hr = new tabris.Composite({
-				layoutData: {left: 0, right: 0, top: [price, 2], height:1},
-				background: "#000000"
+				layoutData: {left: 0, right: 0, top: [deleteButton, 2], height:1},
+				background: "#ebebeb"
 			}).appendTo(newitem);
 
 
 			deleteButton.trg = true;
 
 			deleteButton.on("select", function() {
-				blockUI();
-				var xhr = new tabris.XMLHttpRequest();
-				xhr.onreadystatechange = function() {
-					if(xhr.readyState === xhr.DONE) {
-						var ref = cordova.InAppBrowser.open('http://ekim.ru/baskets', '_blank', iabSettings);
-						ref.addEventListener('loadstop', function(e) {
-							console.log(xhr.responseText+"('"+item.deletelink+"');");
-							if (deleteButton.trg) {
-								ref.executeScript({code: xhr.responseText+"('"+item.deletelink+"');"});
-								deleteButton.trg = false;
-							} else {
-								unblockUI();
-								ref.close();
-								deleteButton.trg = true;
-								checkCart();
-							}
-							//ref.close();
-							
-							console.log(e.url);
-						});
-					}		
-				}
-				xhr.open("GET", "scripts/deleteitem.js?_="+Math.random());
-				xhr.send();
+				navigator.notification.confirm(
+    				'Вы действительно хотите убрать этот товар из корзины?',  // message
+    				function (i) {
+    					if (i == 1) {
+    						blockUI();
+							newitem.set("background","#cccccc");
+							fetch("./scripts/deleteitem.js",{method:"get",cache:"no-cache"}).then(function(response) {
+				  				return response.text();
+							}).then(function(text) {
+								var ref = cordova.InAppBrowser.open('http://ekim.ru/baskets', '_blank', iabSettings);
+								ref.addEventListener('loadstop', function(e) {
+									console.log(text+"('"+item.deletelink+"');");
+									if (deleteButton.trg) {
+										ref.executeScript({code: text+"('"+item.deletelink+"');"});
+										deleteButton.trg = false;
+									} else {
+										unblockUI();
+										ref.close();
+										deleteButton.trg = true;
+										checkCart();
+									}
+									//ref.close();	
+									console.log(e.url);
+								});
+							});
+    					}
+    				},
+    				'Предупреждение',            // title
+    				['Да','Отмена']            // buttonLabels
+				);
 			});
 		});
 	}
@@ -151,80 +173,58 @@ var openPage = module.exports = function () {
 	function checkCart() {
 		//console.log("here");
 		blockUI();
-		var xhr = new tabris.XMLHttpRequest();
-		xhr.onreadystatechange = function() {
-			if(xhr.readyState === xhr.DONE) {
-				var ref = cordova.InAppBrowser.open('http://ekim.ru/baskets', '_blank', iabSettings);
-				ref.addEventListener('loadstop', function(e) {
-		    		ref.executeScript({code: xhr.responseText}, function(r) {
-		    			console.log(r);
-		    			rebuildCart(r[0]);
-		    			unblockUI();
-		    			if (r[0].length==0) {
-		    				orderButton.set('enabled',false);
-		    			}
-		    			//switchBusy();
-		    			ref.close();
-		    		});
-				});
-			}
-		}
-		xhr.open("GET", "scripts/cartcheck.js?_="+Math.random());
-		xhr.send();
+		fetch("./scripts/cartcheck.js",{method:"get",cache:"no-cache"}).then(function(response) {
+	  		return response.text();
+		}).then(function(text) {
+			var ref = cordova.InAppBrowser.open('http://ekim.ru/baskets', '_blank', iabSettings);
+			ref.addEventListener('loadstop', function(e) {
+		   		ref.executeScript({code: text}, function(r) {
+		   			console.log(r);
+		   			rebuildCart(r[0]);
+		   			unblockUI();
+		   			//switchBusy();
+		   			ref.close();
+		   		});
+			});
+		});
 	}
 
-	function searchonsite(text) {
+	function searchonsite(article) {
 		blockUI();
-		var xhr = new tabris.XMLHttpRequest();
-		xhr.onreadystatechange = function() {
-			if(xhr.readyState === xhr.DONE) {
-				var ref = cordova.InAppBrowser.open('http://ekim.ru/price_items/search?oem='+text, '_blank', iabSettings);
-				ref.addEventListener('loadstop', function(e) {
-					console.log(e.url);
-					if (e.url.indexOf("price")>-1) {
-		    			item.price = decodeURIComponent(e.url.split("=")[1]);
-		    			ref.close();
-		    			console.log(item);
-		    			//page.close();
-		    			unblockUI();
-		    			openItem(item,text,checkCart);
-		    			//console.log(e.url.split("=")[1]);
-		    		} else if (e.url.indexOf("/NOBRAND/")>-1) {
-		    			console.log("no item found");
-		    			navigator.notification.alert(
-		    				"К сожалению ничего не найдено! Распознанный код:"+text,
-		    				function () {},
-		    				"Ошибка!",
-		    				"Продолжить"
-		    			);
-		    			ref.close();
-		    			unblockUI();
-		    			//switchBusy();
-		    		} else {
-		    			ref.executeScript({code: xhr.responseText}, function(r) {
-
-
-
-		    				console.log(r);
-
-		    				item.imgurl = r[0][0];
-		    				item.name = r[0][1];
-		    				/*ref.close();
-		    				if (r[0]=="success") {
-		    					console.log("we are here");
-		    					page2.open();
-		    					page.close();
-		    				} else {
-
-		    					textView.set("text", "Неверный логин или пароль!");
-		    				}*/
-		    			});
-		    		}
-				});
-			}
-		}
-		xhr.open("GET", "scripts/search.js?_="+Math.random());
-		xhr.send();
+		fetch("./scripts/search.js",{method:"get",cache:"no-cache"}).then(function(response) {
+	  		return response.text();
+		}).then(function(text) {
+			var ref = cordova.InAppBrowser.open('http://ekim.ru/price_items/search?oem='+article, '_blank', iabSettings);
+			ref.addEventListener('loadstop', function(e) {
+				console.log(e.url);
+				if (e.url.indexOf("price")>-1) {
+	    			item.price = decodeURIComponent(e.url.split("=")[1]);
+		   			ref.close();
+		   			console.log(item);
+		   			//page.close();
+		   			unblockUI();
+		   			openItem(item,article,checkCart);
+	    			//console.log(e.url.split("=")[1]);
+		   		} else if (e.url.indexOf("/NOBRAND/")>-1) {
+		   			console.log("no item found");
+		   			navigator.notification.alert(
+		   				"К сожалению ничего не найдено! Распознанный код:"+article,
+	    				function () {},
+	    				"Ошибка!",
+		   				"Продолжить"
+		  			);
+		   			ref.close();
+		   			unblockUI();
+		    		//switchBusy();
+		    	} else {
+		    		ref.executeScript({code: text}, function(r) {
+		    			console.log(r);
+		    			item.imgurl = r[0][0];
+		    			item.name = r[0][1];
+		   			});
+		   		}
+			});
+		});
 	}
 
 	scanButton.on("select", function() {
@@ -242,7 +242,7 @@ var openPage = module.exports = function () {
 	      	{
 	          "preferFrontCamera" : true, // iOS and Android 
 	          "showFlipCameraButton" : true, // iOS and Android 
-	          "prompt" : "Place a barcode inside the scan area", // supported on Android only 
+	          "prompt" : "Поместите штрих-код внутрь сканируемой области", // supported on Android only 
 	          //"formats" : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED 
 	          "orientation" : "landscape" // Android only (portrait|landscape), default unset so it rotates with the device 
 	      	}

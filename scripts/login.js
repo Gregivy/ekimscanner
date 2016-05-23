@@ -6,6 +6,7 @@
 		$("#new_customer_session input[type='submit']").click();
 		return "tryingtologin";
 	} else {
-		return "success";
+		location.replace("http://ekim.ru/logout");
+		return "oldsession";
 	}
 })

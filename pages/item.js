@@ -22,50 +22,48 @@ var initItem = module.exports = function (item,url,checkCart) {
 		image: {src:"http://ekim.ru"+item.imgurl,scale:1},
 		background: "rgb(255, 255, 255)",
 		scaleMode: "fill",
-		layoutData: {top: 0, left: 0, right: 0, height: 200}
+		layoutData: {top: 10, left: 10, right: 10, height: 200}
 	}).appendTo(page);
 
 	var name = new tabris.TextView({
-		font: "24px",
+		font: "18px",
+		alignment: "center",
 		text: item.name,
-		layoutData: {centerX: 0, top: [img, 20]}
+		layoutData: {left:10, right: 10, top: [img, 20]}
 	}).appendTo(page);
 
 	var price = new tabris.TextView({
-		font: "24px",
-		text: item.price,
+		font: "18px",
+		text: "Цена: " + item.price,
 		layoutData: {centerX: 0, top: [name, 20]}
 	}).appendTo(page);	
 
 	var add2cart = new tabris.Button({
 		text: "Добавить в корзину",
-		layoutData: {centerX: 0, top: [price,10]}
+		layoutData: {left:50, right:50, height:60, top: [price,10]}
 	}).appendTo(page);
 
 	add2cart.on("select", function() {
 		switchBusy();
-		var xhr = new tabris.XMLHttpRequest();
-		xhr.onreadystatechange = function() {
-			if(xhr.readyState === xhr.DONE) {
-				console.log(xhr.responseText);
-				var ref = cordova.InAppBrowser.open('http://ekim.ru/price_items/search?oem='+url, '_blank', iabSettings);
-				ref.addEventListener('loadstop', function(e) {
-					//console.log( xhr.responseText+"('"+username.get("text")+"','"+password.get("text")+"');");
-	    			if (e.url.indexOf("added2cart=true") == -1) {
-	    				ref.executeScript({code: xhr.responseText});
-	    			} else if (e.url.indexOf("added2cart=true") > -1) {
-	    				//switchBusy();	
-	    				ref.close();
-		    			page.close();
-		    			checkCart();
-	    			} else {
-	    				switchBusy();
-	    			}
-				});
-			}
-		}
-		xhr.open("GET", "scripts/add2cart.js");
-		xhr.send();	
+		fetch("./scripts/add2cart.js",{method:"get",cache:"no-cache"}).then(function(response) {
+			return response.text();
+		}).then(function(text) {
+			console.log(text);
+			var ref = cordova.InAppBrowser.open('http://ekim.ru/price_items/search?oem='+url, '_blank', iabSettings);
+			ref.addEventListener('loadstop', function(e) {
+				//console.log( xhr.responseText+"('"+username.get("text")+"','"+password.get("text")+"');");
+	   			if (e.url.indexOf("added2cart=true") == -1) {
+	   				ref.executeScript({code: text});
+	   			} else if (e.url.indexOf("added2cart=true") > -1) {
+	    			//switchBusy();	
+	    			ref.close();
+		    		page.close();
+		    		checkCart();
+	   			} else {
+	   				switchBusy();
+	    		}
+			});
+		});
 	});
 
 	page.open();
