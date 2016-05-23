@@ -1,0 +1,32 @@
+header, .path, .main-title, .sub-footer, footer {
+	display: none !important;
+}
+
+.subpage .content {
+	overflow: auto !important;
+}
+
+.wrap-r-col {
+	//width:100% !important;
+	height:100% !important;
+	background-color: white !important;
+}
+
+.subpage .wrap-main:after, .wrap-main {
+	background-image: url() !important;
+}
+
+#new_order {
+	width:100% !important;
+	height:100% !important;
+}
+
+.content {
+		transform-origin: 0 0;
+	transform: scale(2);
+}
+
+body {
+	width:100% !important;
+	height:100% !important;	
+}

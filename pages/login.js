@@ -1,11 +1,22 @@
-var page2 = require("./scanner.js");
+var openScanner = require("./scanner.js");
 
-var iabSettings = 'hidden=no,clearcache=no,clearsessioncache=no';
+function switchBusy() {
+	login.set('enabled',!login.get('enabled'));
+	activityIndicator.set('visible',!activityIndicator.get('visible'));
+}
+
+var iabSettings = 'hidden=yes,clearcache=no,clearsessioncache=no';
 
 var page = module.exports = new tabris.Page({
 	title: "Ekim. Авторизация",
 	topLevel: true
 });
+
+var activityIndicator = new tabris.ActivityIndicator({
+  centerX: 0,
+  centerY: 0,
+  visible: false
+}).appendTo(page);
 
 var logo = new tabris.ImageView({
 	image: {src:"images/logo.jpg",scale:1},
@@ -38,9 +49,10 @@ function checksuccess() {
     				//console.log(r);
     				ref.close();
     				if (r[0]=="success") {
+    					switchBusy();
     					console.log("we are here");
-    					page2.open();
-    					page.close();
+    					openScanner();
+    					//page.close();
     				} else {
 
     					textView.set("text", "Неверный логин или пароль!");
@@ -56,7 +68,35 @@ function checksuccess() {
 
 var trg = true;
 login.on("select", function() {
-	var xhr = new tabris.XMLHttpRequest();
+	switchBusy();
+	fetch("./scripts/login.js",{method:"get",cache:"no-cache"}).then(function(response) {
+  		return response.text();
+	}).then(function(text) {
+		console.log(text);
+		var ref = cordova.InAppBrowser.open('http://ekim.ru', '_blank', iabSettings);
+		ref.addEventListener('loadstop', function() {
+			//console.log( xhr.responseText+"('"+username.get("text")+"','"+password.get("text")+"');");
+    		if (trg) {
+    			ref.executeScript({code: text+"('"+username.get("text")+"','"+password.get("text")+"');"}, function(r){
+   					//console.log(r);
+   					if (r[0] == "success") {
+    					switchBusy();
+    					ref.close();
+    					openScanner();
+    					//page.close();
+    				} else {
+    					trg = false;
+    				}
+    			});
+    		} else {
+    			//switchBusy();
+    			trg = true;
+    			ref.close();
+	    		window.setTimeout(checksuccess,100);
+    		}
+		});
+	});
+	/*var xhr = new tabris.XMLHttpRequest();
 	xhr.onreadystatechange = function() {
 		if(xhr.readyState === xhr.DONE) {
 			console.log(xhr.responseText);
@@ -67,14 +107,16 @@ login.on("select", function() {
     				ref.executeScript({code: xhr.responseText+"('"+username.get("text")+"','"+password.get("text")+"');"}, function(r){
     					//console.log(r);
     					if (r[0] == "success") {
+    						switchBusy();
     						ref.close();
-    						page2.open();
-    						page.close();
+    						openScanner();
+    						//page.close();
     					} else {
     						trg = false;
     					}
     				});
     			} else {
+    				//switchBusy();
     				trg = true;
     				ref.close();
 	    			window.setTimeout(checksuccess,100);
@@ -83,7 +125,7 @@ login.on("select", function() {
 		}
 	}
 	xhr.open("GET", "scripts/login.js");
-	xhr.send();
+	xhr.send();*/
 	
 });
 
