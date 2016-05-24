@@ -1,5 +1,4 @@
 var openItem = require("./item.js");
-var makeOrder = require("./order.js");
 
 var openPage = module.exports = function () {
 	//switchBusy();
