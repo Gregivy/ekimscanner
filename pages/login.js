@@ -50,7 +50,7 @@ var login = new tabris.Button({
 }).appendTo(page);
 
 function checksuccess() {
-	fetch("./scripts/checklogin.js?_="+Math.random(),{method:"get",cache:"no-cache"}).then(function(response) {
+	fetch("./scripts/checklogin.js?",{method:"get",cache:"no-cache"}).then(function(response) {
 		console.log(response);
   		return response.text();
 	}).then(function(text) {
@@ -84,7 +84,7 @@ login.on("select", function() {
 	switchBusy();
 	localStorage.setItem("username",username.get("text"));
 	localStorage.setItem("password",password.get("text"));
-	fetch("./scripts/login.js?_="+Math.random(),{method:"get",cache:"no-cache"}).then(function(response) {
+	fetch("./scripts/login.js",{method:"get",cache:"no-cache"}).then(function(response) {
 		console.log(response);
   		return response.text();
 	}).then(function(text) {
