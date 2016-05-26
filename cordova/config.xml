@@ -7,7 +7,7 @@
   <author email="gpoi@mail.ru" href="https://vk.com/gregp">
    Plyusch Gregory
   </author>
-  <icon src="./icon.png" />
+  <icon src="./ekim_icon.png" />
   <plugin name="cordova-plugin-inappbrowser" version="1.4.0" />
   <plugin name="phonegap-plugin-barcodescanner" version="4.0.0" />
   <plugin name="cordova-plugin-dialogs" version="1.2.1" />
