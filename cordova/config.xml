@@ -7,9 +7,16 @@
   <author email="gpoi@mail.ru" href="https://vk.com/gregp">
    Plyusch Gregory
   </author>
-  <icon src="ekim_icon.png" />
   <plugin name="cordova-plugin-inappbrowser" version="1.4.0" />
   <plugin name="phonegap-plugin-barcodescanner" version="4.0.0" />
   <plugin name="cordova-plugin-dialogs" version="1.2.1" />
   <plugin name="cordova-plugin-network-information" version="1.2.1" />
+  <platform name="android">
+        <icon src="res/android/mipmap-ldpi/ic_launcher.png" density="ldpi" />
+        <icon src="res/android/mipmap-mdpi/ic_launcher.png" density="mdpi" />
+        <icon src="res/android/mipmap-hdpi/ic_launcher.png" density="hdpi" />
+        <icon src="res/android/mipmap-xhdpi/ic_launcher.png" density="xhdpi" />
+        <icon src="res/android/mipmap-xxhdpi/ic_launcher.png" density="xxhdpi" />
+        <icon src="res/android/mipmap-xxxhdpi/ic_launcher.png" density="xxxhdpi" />
+    </platform>
 </widget>
