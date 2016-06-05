@@ -84,7 +84,35 @@ login.on("select", function() {
 	switchBusy();
 	localStorage.setItem("username",username.get("text"));
 	localStorage.setItem("password",password.get("text"));
-	fetch("./scripts/login.js",{method:"get",cache:"no-cache"}).then(function(response) {
+	fetch("http://ekim.ru/logout").then(function(){
+		fetch("http://ekim.ru/customer_sessions", {
+			method: "post",
+			credentials: "include",
+			headers: {  
+		   		"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"  
+		    },
+		    redirect: "follow",
+		    body: "utf8=✓&customer_session[email]="+username.get("text")+"&customer_session[password]="+password.get("text")
+		}).then(function(response){
+			return response.text();
+		}).then(function(text){
+			switchBusy();
+			if (text.indexOf("http://ekim.ru/logout")>-1) {
+				openScanner();
+			} else {
+				navigator.notification.alert(
+			   		"Неверный логин или пароль!",
+		    		function () {},
+		    		"Ошибка!",
+					"Продолжить"
+			  	);
+			}
+		});
+	});
+	
+	
+
+	/*fetch("./scripts/login.js",{method:"get",cache:"no-cache"}).then(function(response) {
 		console.log(response);
   		return response.text();
 	}).then(function(text) {
@@ -111,6 +139,6 @@ login.on("select", function() {
 	    		window.setTimeout(checksuccess,100);
     		}
 		});
-	});
+	});*/
 	
 });

@@ -45,7 +45,23 @@ var initItem = module.exports = function (item,url,checkCart) {
 
 	add2cart.on("select", function() {
 		switchBusy();
-		fetch("./scripts/add2cart.js",{method:"get",cache:"no-cache"}).then(function(response) {
+
+		fetch("http://ekim.ru/baskets", {
+			method: "post",
+			credentials: "include",
+			headers: {  
+		   		"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"  
+		    },
+		    redirect: "follow",
+		    body: "basket[qnt]=1&price_result[oem]="+url
+		}).then(function(response){
+			return response.text();
+		}).then(function(text){
+			page.close();
+		    checkCart();
+		});
+
+		/*fetch("./scripts/add2cart.js",{method:"get",cache:"no-cache"}).then(function(response) {
 			return response.text();
 		}).then(function(text) {
 			console.log(text);
@@ -63,7 +79,7 @@ var initItem = module.exports = function (item,url,checkCart) {
 	   				switchBusy();
 	    		}
 			});
-		});
+		});*/
 	});
 
 	page.open();

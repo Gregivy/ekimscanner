@@ -46,7 +46,7 @@ var openPage = module.exports = function () {
 	}).appendTo(page);
 
 	var item = {
-		imgurl:'',
+		imgurl: '',
 		name: '',
 		price: ''
 	}
@@ -190,7 +190,35 @@ var openPage = module.exports = function () {
 
 	function searchonsite(article) {
 		blockUI();
-		fetch("./scripts/search.js",{method:"get",cache:"no-cache"}).then(function(response) {
+		fetch("http://ekim.ru/price_items/search?oem="+article).then(function(response1){
+			return response1.text();
+		}).then(function (text) {
+			console.log(text.indexOf('<h1 class="main-title">Nobrand'));
+			if (text.indexOf('<h1 class="main-title">Nobrand')==-1) {
+				fetch("http://ekim.ru/products/price.json?oem="+article, {
+					method: "post"
+				}).then(function(response){
+					return response.json();
+				}).then(function(json){
+					unblockUI();
+					console.log(json);
+					var title = json["original_prices"]["data"][0]["detail_name"];
+					var cost = json["original_prices"]["data"][0]["cost"];
+					var imgurl = text.split('" class="lightbox fancybox"')[0].split('<a href="')[1];
+					console.log({imgurl: imgurl, name: title, price: cost});
+					openItem({imgurl: "http://ekim.ru/"+imgurl, name: title, price: cost},article,checkCart);
+				});
+			} else {
+				unblockUI();
+				navigator.notification.alert(
+	   				"К сожалению ничего не найдено! Распознанный код:"+article,
+	   				function () {},
+	    			"Ошибка!",
+		   			"Продолжить"
+		  		);
+			}
+		});
+		/*fetch("./scripts/search.js",{method:"get",cache:"no-cache"}).then(function(response) {
 	  		return response.text();
 		}).then(function(text) {
 			var ref = cordova.InAppBrowser.open('http://ekim.ru/price_items/search?oem='+article, '_blank', iabSettings);
@@ -223,7 +251,7 @@ var openPage = module.exports = function () {
 		   			});
 		   		}
 			});
-		});
+		});*/
 	}
 
 	scanButton.on("select", function() {
@@ -248,7 +276,7 @@ var openPage = module.exports = function () {
 	   );
 	});
 
-	blockUI();
+	//blockUI();
 	page.open();
-	window.setTimeout(checkCart,100);
+	//window.setTimeout(checkCart,100);
 }
