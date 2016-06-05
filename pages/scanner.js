@@ -196,8 +196,12 @@ var openPage = module.exports = function () {
 			console.log(text.indexOf('<h1 class="main-title">Nobrand'));
 			if (text.indexOf('<h1 class="main-title">Nobrand')==-1) {
 				fetch("http://ekim.ru/products/price.json?oem="+article, {
-					method: "post"
+					method: "post",
+					headers: {
+						'Content-type': ' application/json; charset=utf-8'
+					}
 				}).then(function(response){
+					console.log(response.status);
 					return response.json();
 				}).then(function(json){
 					unblockUI();

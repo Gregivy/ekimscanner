@@ -3,8 +3,6 @@
   "description": "Barcode scanner for ekim.ru",
   "main": "main.js",
   "dependencies": {
-    "promise": "^6.1.0",
-    "tabris": "^1.7.0",
-    "whatwg-fetch": "^0.7.0"
+    "tabris": "^1.7.0"
   }
 }
