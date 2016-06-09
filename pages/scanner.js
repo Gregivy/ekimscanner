@@ -190,28 +190,42 @@ var openPage = module.exports = function () {
 
 	function searchonsite(article) {
 		blockUI();
+ 
 		fetch("http://ekim.ru/price_items/search?oem="+article).then(function(response1){
 			return response1.text();
 		}).then(function (text) {
 			console.log(text.indexOf('<h1 class="main-title">Nobrand'));
 			if (text.indexOf('<h1 class="main-title">Nobrand')==-1) {
-				fetch("http://ekim.ru/products/price.json?oem="+article, {
-					method: "post",
-					headers: {
-						'Content-type': ' application/json; charset=utf-8'
-					}
-				}).then(function(response){
-					console.log(response.status);
-					return response.json();
-				}).then(function(json){
-					unblockUI();
-					console.log(json);
-					var title = json["original_prices"]["data"][0]["detail_name"];
-					var cost = json["original_prices"]["data"][0]["cost"];
-					var imgurl = text.split('" class="lightbox fancybox"')[0].split('<a href="')[1];
-					console.log({imgurl: imgurl, name: title, price: cost});
-					openItem({imgurl: "http://ekim.ru/"+imgurl, name: title, price: cost},article,checkCart);
-				});
+				console.log("get/text");
+				var pricefetch = function () {
+					fetch("view-source:http://ekim.ru/products/price.json?oem="+article, {
+						method: "post",
+						mode: "no-cors",
+						redirect: "follow",
+						headers: {
+							'Accept': '*/*',
+							'Content-Type': 'application/json'
+						}
+					}).then(function(response){
+						console.log(response.status);
+						return response.json();
+					}).catch(function(err) {
+						//pricefetch();
+						console.log(err);
+						//return false;
+					}).then(function(json){
+						if (json!==false) {
+							unblockUI();
+							console.log(json);
+							var title = json["original_prices"]["data"][0]["detail_name"];
+							var cost = json["original_prices"]["data"][0]["cost"];
+							var imgurl = text.split('" class="lightbox fancybox"')[0].split('<a href="')[1];
+							console.log({imgurl: imgurl, name: title, price: cost});
+							openItem({imgurl: "http://ekim.ru/"+imgurl, name: title, price: cost},article,checkCart);
+						}
+					});
+				};
+				pricefetch();
 			} else {
 				unblockUI();
 				navigator.notification.alert(

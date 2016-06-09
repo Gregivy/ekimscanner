@@ -1,8 +1,7 @@
 //new tabris.Drawer().append(new tabris.PageSelector());
 
 
-Promise = require("promise");
-require("whatwg-fetch");
+console.log(window.open);
 
 document.addEventListener("offline", function () {
 	navigator.notification.alert(
