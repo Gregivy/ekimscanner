@@ -198,7 +198,7 @@ var openPage = module.exports = function () {
 			if (text.indexOf('<h1 class="main-title">Nobrand')==-1) {
 				console.log("get/text");
 				var pricefetch = function () {
-					fetch("view-source:http://ekim.ru/products/price.json?oem="+article, {
+					fetch("http://ekim.ru/products/price.json?oem="+article, {
 						method: "post",
 						mode: "no-cors",
 						redirect: "follow",
@@ -225,7 +225,12 @@ var openPage = module.exports = function () {
 						}
 					});
 				};
-				pricefetch();
+				fetch("http://ekim.ru/").then(function(response1){
+					return response1.text();
+				}).then(function (text) {
+					console.log(text);
+				});
+				//pricefetch();
 			} else {
 				unblockUI();
 				navigator.notification.alert(
