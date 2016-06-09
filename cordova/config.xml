@@ -11,6 +11,7 @@
   <plugin name="phonegap-plugin-barcodescanner" version="4.0.0" />
   <plugin name="cordova-plugin-dialogs" version="1.2.1" />
   <plugin name="cordova-plugin-network-information" version="1.2.1" />
+  <plugin name="cordova-plugin-fetch" spec="https://github.com/aporat/cordova-plugin-fetch.git" />
   <plugin name="cordova-plugin-whitelist" spec="1" />
   <access origin="*" />
   <allow-intent href="http://*/*" />

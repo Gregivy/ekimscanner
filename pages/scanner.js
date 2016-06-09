@@ -225,12 +225,7 @@ var openPage = module.exports = function () {
 						}
 					});
 				};
-				fetch("http://ekim.ru/").then(function(response1){
-					return response1.text();
-				}).then(function (text) {
-					console.log(text);
-				});
-				//pricefetch();
+				pricefetch();
 			} else {
 				unblockUI();
 				navigator.notification.alert(
